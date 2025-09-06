@@ -1,11 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; // ✅ add this
 
 export default function ThirdPage() {
   const [pokemonName, setPokemonName] = useState<string>("");
   const [selectedPokemon, setSelectedPokemon] = useState<string | null>(null);
   const [pokemonImage, setPokemonImage] = useState<string | null>(null);
-  const [playerName, setPlayerName] = useState<string>(""); // 🔹 add state for player name
+  const [playerName, setPlayerName] = useState<string>("");
+  const router = useRouter(); // ✅ add this
 
   // Load player name from localStorage
   useEffect(() => {
@@ -26,7 +28,7 @@ export default function ThirdPage() {
       const data = await response.json();
       setSelectedPokemon(data.name);
       setPokemonImage(data.sprites.front_default);
-      setPokemonName(""); // clear input after selection
+      setPokemonName("");
     } catch (error) {
       alert("Pokémon not found!");
     }
@@ -35,14 +37,14 @@ export default function ThirdPage() {
   // Fetch random Pokémon
   const fetchRandomPokemon = async () => {
     try {
-      const randomId = Math.floor(Math.random() * 898) + 1; // Gen 1–8
+      const randomId = Math.floor(Math.random() * 898) + 1;
       const response = await fetch(
         `https://pokeapi.co/api/v2/pokemon/${randomId}`
       );
       const data = await response.json();
       setSelectedPokemon(data.name);
       setPokemonImage(data.sprites.front_default);
-      setPokemonName(""); // clear input after random selection
+      setPokemonName("");
     } catch (error) {
       alert("Error fetching random Pokémon!");
     }
@@ -55,7 +57,8 @@ export default function ThirdPage() {
       return;
     }
     alert(`${playerName} selected ${selectedPokemon}!`);
-    // 👉 You can navigate to the next page here using router.push("/nextpage")
+    localStorage.setItem("selectedPokemon", selectedPokemon); // ✅ save chosen Pokémon
+    router.push("/fourth_page"); // ✅ navigate to 4th page
   };
 
   return (
@@ -69,7 +72,7 @@ export default function ThirdPage() {
       </div>
 
       {/* Main Section */}
-      <div className="flex justify-between items-start w-full mt-16">
+      <div className="flex justify-between items-start w-full mt-16 pl-55">
         {/* Left Side - Input + Buttons */}
         <div className="flex-1 max-w-md">
           <h2 className="text-lg font-bold mb-2">
@@ -119,16 +122,18 @@ export default function ThirdPage() {
           )}
         </div>
       </div>
+
+      {/* START BATTLE Button (only visible when Pokémon is selected) */}
       {selectedPokemon && (
-         <div className="ml-[-950px] mt-[-70px]">
-           <button
-             onClick={handleOk}
-             className="bg-green-600 text-white px-6 py-3 rounded-lg text-lg hover:bg-green-700"
-           >
-             OK
-           </button>
-         </div>
-       )}
+        <div className="ml-[-500px] mt-[-70px]">
+          <button
+            onClick={handleOk}
+            className="bg-green-600 text-white px-6 py-3 rounded-lg text-lg"
+          >
+            START BATTLE
+          </button>
+        </div>
+      )}
     </div>
   );
 }
