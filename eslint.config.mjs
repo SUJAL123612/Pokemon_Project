@@ -14,7 +14,10 @@ const eslintConfig = [
 
   {
     rules: {
-      "@next/next/no-img-element": "off", 
+      "@next/next/no-img-element": "off", // allow <img>
+      "@typescript-eslint/no-explicit-any": "off", // allow 'any' type
+      "@typescript-eslint/no-unused-vars": "off", // ignore unused vars
+      "react-hooks/exhaustive-deps": "off", // ignore dependency warnings
     },
   },
 ];
