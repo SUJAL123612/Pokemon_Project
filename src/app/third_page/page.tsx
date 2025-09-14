@@ -6,6 +6,7 @@ export default function ThirdPage() {
   const [pokemonName, setPokemonName] = useState<string>("");
   const [selectedPokemon, setSelectedPokemon] = useState<string | null>(null);
   const [pokemonImage, setPokemonImage] = useState<string | null>(null);
+  const [pokemonType, setPokemonType] = useState<string | null>(null); // ✅ new state
   const [playerName, setPlayerName] = useState<string>("");
   const router = useRouter(); // ✅ add this
 
@@ -28,6 +29,11 @@ export default function ThirdPage() {
       const data = await response.json();
       setSelectedPokemon(data.name);
       setPokemonImage(data.sprites.front_default);
+
+      // ✅ get types (some Pokémon have 2 types)
+      const types = data.types.map((t: any) => t.type.name).join(", ");
+      setPokemonType(types);
+
       setPokemonName("");
     } catch (error) {
       alert("Pokémon not found!");
@@ -44,6 +50,11 @@ export default function ThirdPage() {
       const data = await response.json();
       setSelectedPokemon(data.name);
       setPokemonImage(data.sprites.front_default);
+
+      // ✅ get types
+      const types = data.types.map((t: any) => t.type.name).join(", ");
+      setPokemonType(types);
+
       setPokemonName("");
     } catch (error) {
       alert("Error fetching random Pokémon!");
@@ -103,11 +114,18 @@ export default function ThirdPage() {
             </button>
           </div>
 
-          {/* Selected Pokémon Name */}
+          {/* Selected Pokémon Name + Type */}
           {selectedPokemon && (
-            <p className="text-green-600 font-bold mt-4">
-              ✅ Selected Pokémon: {selectedPokemon}
-            </p>
+            <div className="mt-4">
+              <p className="text-green-600 font-bold">
+                ✅ Selected Pokémon: {selectedPokemon}
+              </p>
+              {pokemonType && (
+                <p className="text-purple-600 font-semibold">
+                  🌟 Type: {pokemonType}
+                </p>
+              )}
+            </div>
           )}
         </div>
 
