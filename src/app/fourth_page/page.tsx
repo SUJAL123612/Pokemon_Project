@@ -139,7 +139,7 @@ export default function FourthPage() {
 
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center">
-      <div className="flex items-center space-x-4 mt-[-180px] mb-[50px]">
+      <div className="flex items-center space-x-4 mt-[-100px] ">
         <img src="logo.svg" alt="Logo" className="w-32 h-32" />
         <span className="text-red-500 text-5xl font-extrabold cursor-default">
           BATTLE ARENA
