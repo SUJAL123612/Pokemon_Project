@@ -36,6 +36,16 @@ export default function FourthPage() {
     dragon: ["dragon"],
   };
 
+  // Function to get random Pokémon name
+  const getRandomPokemon = async () => {
+    const totalPokemon = 898; // Gen 1–8 Pokémon
+    const randomId = Math.floor(Math.random() * totalPokemon) + 1;
+
+    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
+    const data = await res.json();
+    return data.name; // ✅ return the Pokémon name instead of number
+  };
+
   // Load data
   useEffect(() => {
     const storedName = localStorage.getItem("playerName");
@@ -46,20 +56,26 @@ export default function FourthPage() {
       fetchPokemonData(storedPokemon, true);
     }
 
+    // Trainers with placeholder Pokémon (they’ll be randomized later)
     setTrainers([
-      { name: "Trainer Brock", pokemon: "onix" },
-      { name: "Trainer Misty", pokemon: "starmie" },
-      { name: "Boss Lance", pokemon: "dragonite" },
+      { name: "Trainer Brock", pokemon: "" },
+      { name: "Trainer Misty", pokemon: "" },
+      { name: "Boss Lance", pokemon: "" },
     ]);
   }, []);
 
-  // Reset HP + fetch trainer Pokémon when trainer changes
+  // Reset HP + assign new random Pokémon for trainer when trainer changes
   useEffect(() => {
     setPlayerHP(100);
     setTrainerHP(100);
     setBattleMessage("");
+
     if (trainers[currentTrainer]) {
-      fetchPokemonData(trainers[currentTrainer].pokemon, false);
+      (async () => {
+        const newPokemon = await getRandomPokemon(); // 🎲 fetch random Pokémon name
+        trainers[currentTrainer].pokemon = newPokemon;
+        fetchPokemonData(newPokemon, false);
+      })();
     }
   }, [currentTrainer, trainers]);
 
@@ -167,7 +183,11 @@ export default function FourthPage() {
           <div className="flex space-x-20 mt-4">
             <div className="text-center">
               {playerImage && (
-                <img src={playerImage} alt={playerPokemon!} className="w-32 h-32 mx-auto" />
+                <img
+                  src={playerImage}
+                  alt={playerPokemon!}
+                  className="w-32 h-32 mx-auto"
+                />
               )}
               <p className="font-bold">{playerPokemon}</p>
               <p className="text-sm text-gray-600">Type: {playerType}</p>
@@ -182,7 +202,11 @@ export default function FourthPage() {
 
             <div className="text-center">
               {trainerImage && (
-                <img src={trainerImage} alt={trainers[currentTrainer].pokemon} className="w-32 h-32 mx-auto" />
+                <img
+                  src={trainerImage}
+                  alt={trainers[currentTrainer].pokemon}
+                  className="w-32 h-32 mx-auto"
+                />
               )}
               <p className="font-bold">{trainers[currentTrainer].pokemon}</p>
               <p className="text-sm text-gray-600">Type: {trainerType}</p>
