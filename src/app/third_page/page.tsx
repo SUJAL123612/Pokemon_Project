@@ -1,16 +1,16 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // ✅ add this
+import { useRouter } from "next/navigation"; 
 
 export default function ThirdPage() {
   const [pokemonName, setPokemonName] = useState<string>("");
   const [selectedPokemon, setSelectedPokemon] = useState<string | null>(null);
   const [pokemonImage, setPokemonImage] = useState<string | null>(null);
-  const [pokemonType, setPokemonType] = useState<string | null>(null); // ✅ new state
+  const [pokemonType, setPokemonType] = useState<string | null>(null); 
   const [playerName, setPlayerName] = useState<string>("");
-  const router = useRouter(); // ✅ add this
+  const router = useRouter(); 
 
-  // Load player name from localStorage
+
   useEffect(() => {
     const storedName = localStorage.getItem("playerName");
     if (storedName) {
@@ -18,7 +18,7 @@ export default function ThirdPage() {
     }
   }, []);
 
-  // Fetch Pokémon by name
+
   const fetchPokemon = async () => {
     if (!pokemonName) return;
     try {
@@ -30,7 +30,7 @@ export default function ThirdPage() {
       setSelectedPokemon(data.name);
       setPokemonImage(data.sprites.front_default);
 
-      // ✅ get types (some Pokémon have 2 types)
+   
       const types = data.types.map((t: any) => t.type.name).join(", ");
       setPokemonType(types);
 
@@ -40,7 +40,7 @@ export default function ThirdPage() {
     }
   };
 
-  // Fetch random Pokémon
+  
   const fetchRandomPokemon = async () => {
     try {
       const randomId = Math.floor(Math.random() * 898) + 1;
@@ -51,7 +51,7 @@ export default function ThirdPage() {
       setSelectedPokemon(data.name);
       setPokemonImage(data.sprites.front_default);
 
-      // ✅ get types
+     
       const types = data.types.map((t: any) => t.type.name).join(", ");
       setPokemonType(types);
 
@@ -61,15 +61,15 @@ export default function ThirdPage() {
     }
   };
 
-  // OK button action
+  
   const handleOk = () => {
     if (!selectedPokemon) {
       alert("Please select a Pokémon first!");
       return;
     }
     alert(`${playerName} selected ${selectedPokemon}!`);
-    localStorage.setItem("selectedPokemon", selectedPokemon); // ✅ save chosen Pokémon
-    router.push("/fourth_page"); // ✅ navigate to 4th page
+    localStorage.setItem("selectedPokemon", selectedPokemon); 
+    router.push("/fourth_page"); 
   };
 
   return (

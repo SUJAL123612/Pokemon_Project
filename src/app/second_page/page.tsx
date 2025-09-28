@@ -11,8 +11,8 @@ export default function Name() {
       alert("Please enter your name!");
       return;
     }
-    localStorage.setItem("playerName", playerName); // save to localStorage
-    router.push("/third_page"); // go to third page
+    localStorage.setItem("playerName", playerName); 
+    router.push("/third_page"); 
   };
 
   return (

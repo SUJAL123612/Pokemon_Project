@@ -20,7 +20,7 @@ export default function FourthPage() {
   const [playerHP, setPlayerHP] = useState<number>(100);
   const [trainerHP, setTrainerHP] = useState<number>(100);
 
-  // Type advantage chart
+  
   const typeAdvantages: Record<string, string[]> = {
     fire: ["grass", "ice", "bug", "steel"],
     water: ["fire", "ground", "rock"],
@@ -36,17 +36,17 @@ export default function FourthPage() {
     dragon: ["dragon"],
   };
 
-  // Function to get random Pokémon name
+
   const getRandomPokemon = async () => {
-    const totalPokemon = 898; // Gen 1–8 Pokémon
+    const totalPokemon = 898; 
     const randomId = Math.floor(Math.random() * totalPokemon) + 1;
 
     const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
     const data = await res.json();
-    return data.name; // ✅ return the Pokémon name instead of number
+    return data.name; 
   };
 
-  // Load data
+  
   useEffect(() => {
     const storedName = localStorage.getItem("playerName");
     const storedPokemon = localStorage.getItem("selectedPokemon");
@@ -56,7 +56,7 @@ export default function FourthPage() {
       fetchPokemonData(storedPokemon, true);
     }
 
-    // Trainers with placeholder Pokémon (they’ll be randomized later)
+
     setTrainers([
       { name: "Trainer Brock", pokemon: "" },
       { name: "Trainer Misty", pokemon: "" },
@@ -64,7 +64,7 @@ export default function FourthPage() {
     ]);
   }, []);
 
-  // Reset HP + assign new random Pokémon for trainer when trainer changes
+
   useEffect(() => {
     setPlayerHP(100);
     setTrainerHP(100);
@@ -72,14 +72,14 @@ export default function FourthPage() {
 
     if (trainers[currentTrainer]) {
       (async () => {
-        const newPokemon = await getRandomPokemon(); // 🎲 fetch random Pokémon name
+        const newPokemon = await getRandomPokemon(); 
         trainers[currentTrainer].pokemon = newPokemon;
         fetchPokemonData(newPokemon, false);
       })();
     }
   }, [currentTrainer, trainers]);
 
-  // Fetch Pokémon details
+
   const fetchPokemonData = async (pokemon: string, isPlayer: boolean) => {
     try {
       const res = await fetch(
@@ -100,19 +100,19 @@ export default function FourthPage() {
     }
   };
 
-  // Calculate damage
+
   const calculateDamage = (attacker: string, defender: string) => {
-    if (typeAdvantages[attacker]?.includes(defender)) return 40; // strong
-    if (typeAdvantages[defender]?.includes(attacker)) return 10; // weak
-    return 20; // neutral
+    if (typeAdvantages[attacker]?.includes(defender)) return 40; 
+    if (typeAdvantages[defender]?.includes(attacker)) return 10; 
+    return 20; 
   };
 
-  // Fight logic
+
   const fightTurn = () => {
     if (!playerPokemon || currentTrainer >= trainers.length) return;
     const trainer = trainers[currentTrainer];
 
-    // Player attack
+    
     const playerAttack = calculateDamage(playerType, trainerType);
     setTrainerHP((prev) => Math.max(prev - playerAttack, 0));
     setBattleMessage(
@@ -130,7 +130,7 @@ export default function FourthPage() {
     }, 1000);
   };
 
-  // Win condition
+
   useEffect(() => {
     if (trainerHP === 0) {
       if (currentTrainer < trainers.length - 1) {
@@ -145,7 +145,7 @@ export default function FourthPage() {
     }
   }, [trainerHP]);
 
-  // Lose condition
+
   useEffect(() => {
     if (playerHP === 0) {
       setBattleMessage(`${playerName}'s ${playerPokemon} fainted! 💀 Game Over.`);
